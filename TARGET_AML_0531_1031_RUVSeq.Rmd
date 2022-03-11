@@ -1,0 +1,98 @@
+---
+title: "Batch Effect Correction"
+author: "Jenny Smith"
+date: "February 12, 2018"
+output: html_document
+---
+
+```{r setup}
+library(knitr)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=70),tidy=TRUE, fig.align='center')
+knitr::opts_knit$set(root.dir = '/fh/fast/meshinchi_s/workingDir/TARGET/AML_TARGET/RNA/mRNAseq/analysis/2018.02.12_BatchEffect_RUVSeq/')
+```
+
+
+```{r message = FALSE, warning=FALSE}
+library(stringr)
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(tibble)
+library(tidyr)
+getwd()
+```
+
+
+
+```{r}
+CDE.0531 <- read.csv("~/reference_mapping-files/TARGET_AML_current_asof_june30_2016_UPDATED_CLEAN_1.31.18.csv",
+                     stringsAsFactors = FALSE, row.names = 1)
+
+dim(CDE.0531)
+```
+
+
+```{r}
+CDE.1031 <- read.csv("~/reference_mapping-files/TARGET_AML_1031_CDE_cleaned_1.31.2018.csv",
+                     stringsAsFactors = FALSE, row.names = 1)
+
+dim(CDE.1031)
+```
+
+
+```{r}
+HD.0531.cts <- read.csv("~/RNA_seq_Analysis/0000.00.03_Expression_Matrices/TARGET_AML_DxSamples_dupGenesRemoved_cts_Aug2014.csv",
+                        stringsAsFactors = FALSE,
+                        row.names = 1)
+
+colnames(HD.0531.cts) <- str_split_fixed(colnames(HD.0531.cts), "\\.", n=5)[,3]
+head(HD.0531.cts[,1:5])
+```
+
+```{r}
+LD.0531.cts <- read.csv("~/RNA_seq_Analysis/0000.00.03_Expression_Matrices/TARGET_AML_AAML0531_dupGenesRemoved_fractionalCounts.csv",
+                        stringsAsFactors = FALSE,
+                        row.names = 1)
+
+head(LD.0531.cts[,1:5])
+```
+
+```{r}
+HD.1031.cts <- read.csv("~/RNA_seq_Analysis/0000.00.03_Expression_Matrices/TARGET_AML_AAML1031_dupGenesRemoved_FractionalCounts.csv",
+                        stringsAsFactors = FALSE,
+                        row.names = 1)
+
+colnames(HD.1031.cts) <- str_split_fixed(colnames(HD.1031.cts), "\\.", n=3)[,1]
+head(HD.1031.cts[,1:5])
+```
+
+
+
+```{r}
+cts <- list(HD.0531.cts, LD.0531.cts, HD.1031.cts) %>%
+  set_names(c("HD.0531.cts", "LD.0531.cts", "HD.1031.cts"))
+
+# save(cts, file="~/RNA_seq_Analysis/0000.00.03_Expression_Matrices/TARGET_AML_allCohorts_dupGenesRemoved_counts_list.csv")
+```
+
+
+#Combat Method
+
+```{r}
+btw.0531.LD.HD <- intersect(colnames(HD.0531.cts), colnames(LD.0531.cts)) #5 samples
+btw.0531.LD.1031 <- intersect(colnames(LD.0531.cts), colnames(HD.0531.cts)) #5 samples
+```
+
+
+```{r}
+library(sva)
+```
+
+
+```{r}
+
+```
+
+
+
+
